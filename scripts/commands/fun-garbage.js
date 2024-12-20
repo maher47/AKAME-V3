@@ -4,7 +4,8 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "John Lester",
   description: "قمامة",
-  commandCategory: "الــتــرفــيــه والــالــعــاب",
+  prefix: false,
+  category: "الــتــرفــيــه والــالــعــاب",
   usages: "[فارغ أو منشن]",
   cooldowns: 5,
   dependencies: {"fs-extra": "","discord.js": "","discord-image-generation" :"","node-superfetch": ""}

@@ -5,6 +5,7 @@ module.exports.config = {
   hasPermssion: 0,
   credits: "S H A D O W",
   description: "",
+  prefix: false,
   category: "الــــجـــروب", 
   usages: "noprefix",
   cooldowns: 5,

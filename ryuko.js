@@ -4,15 +4,15 @@ module.exports = async ({ api, event }) => {
   const configCustom = {
     autosetbio: {
       status: false,
-      bio: `prefix : ${global.config.PREFIX}`,
+      bio: `الرمز : ${global.config.PREFIX}`,
       note: 'automatically change the bot bio.'
     },
     greetings: {
-      status: true,
-      morning: `goodmorning everyone, have a nice day.`,
-      afternoon: `goodafternoon everyone, don't forget to eat your lunch.`,
-      evening: `goodevening everyone, don't forget to eat.`,
-      sleep: `goodnight everyone, time to sleep.`,
+      status: false,
+      morning: `صباح الخير للجميع، أتمنى لكم يوما لطيفا.`,
+      afternoon: `مساء الخير للجميع، لا تنسوا تناول غداءكم.`,
+      evening: `مساء الخير للجميع، لا تنسوا تناول الطعام.`,
+      sleep: `تصبحون على خير جميعا، حان وقت النوم.`,
       note: 'greetings every morning, afternoon and evening. the timezone is located in Asia/Manila'
     },
     autoDeleteCache: {

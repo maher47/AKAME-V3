@@ -4,7 +4,7 @@ module.exports.config = {
   permission: 0,
   credits: "ryuko",
   description: "beginner's guide",
-  prefix: true,
+  prefix: false,
   premium: false,
   category: "جــروب",
   usages: "[Shows Commands]",
@@ -125,7 +125,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
       ];
       msg += `${
         category.charAt(0).toLowerCase() + category.slice(1)
-      } category :\n\n${commandNames.join("\n")}\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n`;
+      }  \n\n${commandNames.join("\n")}\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n`;
     }
     const numberFontPage = [
       "1",
@@ -149,7 +149,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
       "19",
       "20",
     ];
-    msg += `page ${numberFontPage[currentPage - 1]} of ${
+    msg += `الــصــفــحــة ${numberFontPage[currentPage - 1]}\${
       numberFontPage[totalPages - 1]
     }\n\n`;
     msg += getText("helpList", commands.size, categoryCount, prefix);

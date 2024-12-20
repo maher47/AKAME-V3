@@ -11,9 +11,9 @@ module.exports.run = async function({ api, event, Users, Threads }) {
 	const { threadID } = event;
 	const data = global.data.threadData.get(parseInt(threadID)) || (await Threads.getData(threadID)).data;
 	const name = global.data.userName.get(event.logMessageData.leftParticipantFbId) || await Users.getNameUser(event.logMessageData.leftParticipantFbId);
-	const type = (event.author == event.logMessageData.leftParticipantFbId) ? "ingat sa byahe haha" : "ayan mateluk ka kase haha";
+	const type = (event.author == event.logMessageData.leftParticipantFbId) ? "غادر بكرامته" : "طرده الآدمن";
 	var msg, formPush
-	(typeof data.customLeave == "undefined") ? msg = "fly high {name}, {type}" : msg = data.customLeave;
+	(typeof data.customLeave == "undefined") ? msg = "غادر مجموعتنا {name}, \nالسـبـب : {type}" : msg = data.customLeave;
 	msg = msg.replace(/\{name}/g, name).replace(/\{type}/g, type);
 
 	var formPush = { body: msg }

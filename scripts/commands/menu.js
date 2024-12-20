@@ -98,7 +98,7 @@ module.exports.run = async function({ api, event, args }) {
 	let bonus = 0;
 
 	for (const commandConfig of command) {
-		if (!group.some(item => item.group.toLowerCase() == commandConfig.config.commandCategory.toLowerCase())) group.push({ group: commandConfig.config.category.toLowerCase(), cmds: [commandConfig.config.name] });
+		if (!group.some(item => item.group.toLowerCase() == commandConfig.config.category.toLowerCase())) group.push({ group: commandConfig.config.category.toLowerCase(), cmds: [commandConfig.config.name] });
 		else group.find(item => item.group.toLowerCase() == commandConfig.config.category.toLowerCase()).cmds.push(commandConfig.config.name);
 	}
 

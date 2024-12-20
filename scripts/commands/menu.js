@@ -1,3 +1,6 @@
+const axios = require("axios");
+const fs = require("fs-extra");
+
 module.exports.config = {
   name: "الاوامر",
   version: "1.0.2",
@@ -27,42 +30,6 @@ module.exports.languages = {
   },
 };
 
-
-module.exports.handleEvent = function ({ api, event, getText }) {
-  const { commands } = global.client;
-  const { threadID, messageID, body } = event;  
-
-  if (!body || typeof body == "undefined" || body.indexOf("الاوامر") != 0)
-    return;
-  const splitBody = body.slice(body.indexOf("الاوامر")).trim().split(/\s+/);
-  if (splitBody.length == 1 || !commands.has(splitBody[1].toLowerCase())) return;
-  const threadSetting = global.data.threadData.get(parseInt(threadID)) || {};
-  const command = commands.get(splitBody[1].toLowerCase());
-  const prefix = threadSetting.hasOwnProperty("PREFIX")
-    ? threadSetting.PREFIX
-    : global.config.PREFIX;
-  return api.sendMessage(
-    getText(
-      "moduleInfo",
-      command.config.name,
-      command.config.description,
-      `${prefix}${command.config.name} ${
-        command.config.usages ? command.config.usages : ""
-      }`,
-      command.config.category,
-      command.config.cooldowns,
-      command.config.permission === 0
-        ? getText("user")
-        : command.config.permission === 1
-        ? getText("adminGroup")
-        : getText("adminBot"),
-      command.config.credits
-    ),
-    threadID,
-    messageID
-  );
-};
-
 module.exports.run = async function ({ api, event, args, getText }) {
   const { commands } = global.client;
   const { threadID, messageID } = event;
@@ -85,11 +52,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
     let currentPage = 1;
     if (args[0]) {
       const parsedPage = parseInt(args[0]);
-      if (
-        !isNaN(parsedPage) &&
-        parsedPage >= 1 &&
-        parsedPage <= totalPages
-      ) {
+      if (!isNaN(parsedPage) && parsedPage >= 1 && parsedPage <= totalPages) {
         currentPage = parsedPage;
       } else {
         return api.sendMessage(
@@ -99,6 +62,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
         );
       }
     }
+
     const startIdx = (currentPage - 1) * itemsPerPage;
     const endIdx = startIdx + itemsPerPage;
     const visibleCategories = categoryNames.slice(startIdx, endIdx);
@@ -107,101 +71,32 @@ module.exports.run = async function ({ api, event, args, getText }) {
     for (let i = 0; i < visibleCategories.length; i++) {
       const category = visibleCategories[i];
       const categoryCommands = commandList.filter(
-        (cmd) =>
-          cmd.config.category.toLowerCase() === category
+        (cmd) => cmd.config.category.toLowerCase() === category
       );
       const commandNames = categoryCommands.map((cmd) => cmd.config.name);
-      const numberFont = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-        "10",
-      ];
-      msg += `${
-        category.charAt(0).toLowerCase() + category.slice(1)
-      }  \n\n${commandNames.join("\n")}\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n`;
+      msg += `${category.charAt(0).toLowerCase() + category.slice(1)}:\n${commandNames.join("\n")}\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n`;
     }
-    const numberFontPage = [
-      "1",
-      "2",
-      "3",
-      "4",
-      "5",
-      "6",
-      "7",
-      "8",
-      "9",
-      "10",
-      "11",
-      "12",
-      "13",
-      "14",
-      "15",
-      "16",
-      "17",
-      "18",
-      "19",
-      "20",
-    ];
-    msg += `الــصــفــحــة ${numberFontPage[currentPage - 1]}\${
-      numberFontPage[totalPages - 1]
-    }\n\n`;
+
+    msg += `الــصــفــحــة ${currentPage}/${totalPages}\n\n`;
     msg += getText("helpList", commands.size, categoryCount, prefix);
 
-    const axios = require("axios");
-    const fs = require("fs-extra");
-    const imgP = [];
-    const img = [
-      "https://i.ibb.co/XkS4MRF/947fe622ad70647c3aafbc9f3e8aefee.jpg"
-    ];
-    const path = __dirname + "/cache/menu.png";
-    const rdimg = img[Math.floor(Math.random() * img.length)];
+    const imagePath = __dirname + "/cache/menu.png";
+    const imageUrl = "https://i.ibb.co/XkS4MRF/947fe622ad70647c3aafbc9f3e8aefee.jpg";
 
-    const { data } = await axios.get(rdimg, {
-      responseType: "arraybuffer",
-    });
+    // Download the image
+    const { data } = await axios.get(imageUrl, { responseType: "arraybuffer" });
+    fs.writeFileSync(imagePath, Buffer.from(data, "utf-8"));
 
-    fs.writeFileSync(path, Buffer.from(data, "utf-8"));
-    imgP.push(fs.createReadStream(path));
-    const msgg = {
-  body: `${global.config.BOTNAME} ;\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯\n\n` + msg + `\n\n`
-    };
-
-    const sentMessage = await api.sendMessage(msgg, threadID, async (error, info) => {
+    // Send the message with the image attachment
+    api.sendMessage({
+      body: `${global.config.BOTNAME}:\n\n${msg}`,
+      attachment: fs.createReadStream(imagePath)
+    }, threadID, async (error, info) => {
+      fs.unlinkSync(imagePath); // Remove the image file
       if (autoUnsend) {
-        await new Promise(resolve => setTimeout(resolve, delayUnsend * 500));
+        await new Promise(resolve => setTimeout(resolve, delayUnsend * 1000));
         return api.unsendMessage(info.messageID);
-      } else return;
-    }, messageID);
-  } else {
-    return api.sendMessage(
-      getText(
-        "moduleInfo",
-        command.config.name,
-        command.config.description,
-        `${prefix}${command.config.name} ${
-          command.config.usages ? command.config.usages : ""
-        }`,
-        command.config.category,
-        command.config.cooldowns,
-        command.config.permission === 0
-          ? getText("user")
-          : command.config.permission === 1
-          ? getText("adminGroup")
-          : getText("adminBot"),
-        command.config.credits
-      ),
-      threadID, async (error, info) => {
-      if (autoUnsend) {
-        await new Promise(resolve => setTimeout(resolve, delayUnsend * 500));
-        return api.unsendMessage(info.messageID);
-      } else return;
+      }
     }, messageID);
   }
 };

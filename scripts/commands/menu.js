@@ -78,8 +78,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
     }
 
     msg += `الــصــفــحــة ${currentPage}/${totalPages}\n\n`;
-    msg += getText("helpList", commands.size, categoryCount, prefix);
-
+    
     const imagePath = __dirname + "/cache/menu.png";
     const imageUrl = "https://i.ibb.co/XkS4MRF/947fe622ad70647c3aafbc9f3e8aefee.jpg";
 
@@ -89,7 +88,7 @@ module.exports.run = async function ({ api, event, args, getText }) {
 
     // Send the message with the image attachment
     api.sendMessage({
-      body: `${global.config.BOTNAME}:\n\n${msg}`,
+      body: `${global.config.BOTNAME} menu :\n\n${msg}`,
       attachment: fs.createReadStream(imagePath)
     }, threadID, async (error, info) => {
       fs.unlinkSync(imagePath); // Remove the image file

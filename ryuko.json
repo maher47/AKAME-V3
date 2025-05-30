@@ -4,15 +4,15 @@
   "language": "ar",
   "approval": false,
   "premium": false,
-  "BOTNAME": "𝖆𝖐𝖆𝖒𝖎",
+  "BOTNAME": "Vinx BOT",
   "EMAIL": "houssin.sb4@gmail.com",
-  "PREFIX": "*",
+  "PREFIX": ".",
   "OPERATOR": [
     "",
-    "100091459940475"
+    "61576232405796"
   ],
   "ADMINBOT": [
-    "100076269693499"
+    "61576232405796"
   ],
   "disabledcmds": [],
   "disabledevents": [],
